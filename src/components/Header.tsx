@@ -68,13 +68,43 @@ export default function Header({
     setConnectionError(null);
     if (mode === "real") {
       try {
-        if (typeof window !== "undefined" && (window as any).aptos) {
-          const petra = (window as any).aptos;
-          
-          // Connect to the wallet
+        const petra = typeof window !== "undefined" 
+          ? ((window as any).petra || (window as any).aptos) 
+          : null;
+
+        if (petra) {
+          // Connect to the wallet using Petra/Aptos extension
           const account = await petra.connect();
-          const address = account.address;
-          const publicKey = account.publicKey || null;
+          console.log("Connected to Petra wallet successfully. Raw payload:", account);
+          
+          let address = "";
+          let publicKey = null;
+
+          if (account) {
+            // Highly robust account address parsing to support 2026/AIP-62/SDK shapes
+            if (typeof account.address === "string") {
+              address = account.address;
+            } else if (account.address && typeof account.address.toString === "function") {
+              address = account.address.toString();
+            } else if (typeof account === "string") {
+              address = account;
+            } else if (account.account && account.account.address) {
+              const nestedAddress = account.account.address;
+              address = typeof nestedAddress === "string" ? nestedAddress : nestedAddress.toString();
+            }
+
+            // Public key parsing
+            if (account.publicKey) {
+              publicKey = typeof account.publicKey === "string" ? account.publicKey : account.publicKey.toString();
+            } else if (account.account && account.account.publicKey) {
+              const nestedPubKey = account.account.publicKey;
+              publicKey = typeof nestedPubKey === "string" ? nestedPubKey : nestedPubKey.toString();
+            }
+          }
+
+          if (!address) {
+            throw new Error("Connected but could not resolve account address format.");
+          }
 
           // Request network switch to Shelbynet (Devnet) Programmatically
           await switchToShelbynet(petra);
@@ -91,7 +121,7 @@ export default function Header({
             network: "Shelbynet (Devnet)",
           });
         } else {
-          setConnectionError("Petra Wallet extension was not detected. Please install Petra Wallet or choose 'Instant Sandbox Wallet' for convenient review.");
+          setConnectionError("Petra Wallet extension was not detected. Please install Petra Wallet extension (minimum version 2.0+ supporting 2026 AIP-62 interface) or choose 'Instant Sandbox Wallet' for immediate preview.");
         }
       } catch (err: any) {
         console.error("Wallet connection failed", err);

@@ -119,6 +119,7 @@ export async function switchToShelbynet(petra: any): Promise<boolean> {
     if (typeof petra.changeNetwork === "function") {
       const response = await petra.changeNetwork({
         name: "Shelbynet (Devnet)",
+        nodeUrl: SHELBYNET_RPC_URL,
         rpcUrl: SHELBYNET_RPC_URL,
         chainId: undefined,
       });
