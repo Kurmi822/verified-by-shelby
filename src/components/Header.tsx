@@ -69,7 +69,7 @@ export default function Header({
     if (mode === "real") {
       try {
         const petra = typeof window !== "undefined" 
-          ? ((window as any).petra || (window as any).aptos) 
+          ? ((window as any).aptos || (window as any).petra) 
           : null;
 
         if (petra) {
@@ -323,95 +323,51 @@ export default function Header({
                 </button>
               </div>
             ) : (
-              <button
-                onClick={() => setShowWalletDropdown(!showWalletDropdown)}
-                disabled={isConnecting}
-                className="relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white font-medium text-sm py-2 px-4 shadow-md shadow-indigo-500/10 transition-all duration-300 transform active:scale-95 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                {isConnecting ? (
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Wallet className="h-4 w-4" />
-                )}
-                <span>{isConnecting ? "Connecting..." : "Connect Wallet"}</span>
-              </button>
-            )}
+              <div className="relative">
+                <button
+                  onClick={() => handleConnectWallet("real")}
+                  disabled={isConnecting}
+                  className="relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-orange-600 hover:bg-orange-500 dark:bg-orange-600 dark:hover:bg-orange-500 text-white font-medium text-sm py-2 px-4 shadow-md shadow-orange-500/15 transition-all duration-300 transform active:scale-95 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
+                >
+                  {isConnecting ? (
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <img 
+                      src="https://petra.app/favicon.ico" 
+                      alt="Petra" 
+                      className="h-4 w-4 rounded-full border border-white/20" 
+                    />
+                  )}
+                  <span>{isConnecting ? "Connecting to Petra..." : "Connect Petra Wallet"}</span>
+                </button>
 
-            {/* Dropdown Menu */}
-            {showWalletDropdown && (
-              <div className="absolute right-0 mt-2.5 w-80 origin-top-right rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-4 shadow-xl ring-1 ring-black/5 focus:outline-none transition-all duration-200 z-50">
-                {!wallet.isConnected ? (
-                  <div className="space-y-3.5">
-                    <div>
-                      <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">Connect to Shelby Devnet</h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Select an identity provider or test account interface to access the submission ledger.</p>
+                {connectionError && (
+                  <div className="absolute right-0 mt-2 w-80 bg-rose-500/10 text-rose-600 dark:text-rose-450 border border-rose-500/25 p-3 rounded-2xl text-xs flex flex-col gap-2 shadow-xl z-50">
+                    <div className="flex gap-2">
+                      <ShieldAlert className="h-4 w-4 shrink-0 mt-0.5 text-rose-500" />
+                      <span>{connectionError}</span>
                     </div>
-
-                    {connectionError && (
-                      <div className="bg-rose-500/10 text-rose-600 dark:text-rose-450 border border-rose-500/25 p-2.5 rounded-xl text-xs flex gap-2">
-                        <ShieldAlert className="h-4 w-4 shrink-0 mt-0.5" />
-                        <span>{connectionError}</span>
-                      </div>
-                    )}
-
-                    <div className="grid gap-2">
-                      {/* Sandbox Connect (Recommended & Always active for review) */}
-                      <button
-                        onClick={() => handleConnectWallet("sandbox")}
-                        disabled={isConnecting}
-                        className="flex w-full items-center justify-between rounded-xl border border-dashed border-indigo-500 bg-indigo-50/40 dark:bg-indigo-950/20 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 p-3 text-left transition-all group disabled:opacity-55"
+                    <div className="border-t border-rose-500/10 pt-2 flex justify-between items-center bg-transparent">
+                      <span className="text-[10px] text-slate-500">No Petra extension?</span>
+                      <button 
+                        onClick={() => {
+                          setConnectionError(null);
+                          handleConnectWallet("sandbox");
+                        }}
+                        className="text-[10px] text-indigo-500 dark:text-indigo-400 hover:underline font-bold"
                       >
-                        <div className="flex items-center gap-2.5">
-                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500 text-white shadow">
-                            <Award className="h-4" />
-                          </div>
-                          <div>
-                            <span className="block text-sm font-semibold text-slate-800 dark:text-indigo-300">
-                              Instant Sandbox Wallet
-                            </span>
-                            <span className="block text-[10px] text-slate-500 dark:text-slate-400 italic">
-                              Pre-funded & Faucet-connected
-                            </span>
-                          </div>
-                        </div>
-                        <span className="text-[10px] font-mono bg-indigo-100 dark:bg-indigo-900 px-2 py-0.5 rounded text-indigo-700 dark:text-indigo-200 font-semibold uppercase">
-                          Review
-                        </span>
-                      </button>
-
-                      {/* Petra Wallet */}
-                      <button
-                        onClick={() => handleConnectWallet("real")}
-                        disabled={isConnecting}
-                        className="flex w-full items-center justify-between rounded-xl border border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 hover:bg-slate-50 dark:hover:bg-slate-900/60 p-3 text-left transition-all"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-950/10 dark:text-orange-400">
-                            <img 
-                              src="https://petra.app/favicon.ico" 
-                              alt="Petra" 
-                              className="h-5 w-5 rounded"
-                              onError={(e) => {
-                                // Fallback
-                                (e.target as HTMLElement).style.display = 'none';
-                              }}
-                            />
-                          </div>
-                          <div>
-                            <span className="block text-sm font-semibold text-slate-800 dark:text-slate-200">
-                              Petra Wallet
-                            </span>
-                            <span className="block text-[10px] text-slate-500 dark:text-slate-400">
-                              Injected Aptos Extension
-                            </span>
-                          </div>
-                        </div>
-                        <ExternalLink className="h-3.5 w-3.5 text-slate-400" />
+                        Use Sandbox Account Instead
                       </button>
                     </div>
                   </div>
-                ) : (
-                  <div className="space-y-4">
+                )}
+              </div>
+            )}
+
+            {/* Dropdown Menu (Only shown when connected to browse info and faucet) */}
+            {showWalletDropdown && wallet.isConnected && (
+              <div className="absolute right-0 mt-2.5 w-80 origin-top-right rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-4 shadow-xl ring-1 ring-black/5 focus:outline-none transition-all duration-200 z-50">
+                <div className="space-y-4">
                     {/* Logged In Info */}
                     <div className="flex items-start justify-between">
                       <div>
@@ -485,9 +441,8 @@ export default function Header({
                       </div>
                     </div>
                   </div>
-                )}
-              </div>
-            )}
+                </div>
+              )}
           </div>
         </div>
 
