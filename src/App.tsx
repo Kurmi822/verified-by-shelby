@@ -173,24 +173,36 @@ export default function App() {
     }
   }, []);
 
-  // Update wallet balances based on address change
+  // Update wallet balances based on address change and handle auto-refresh periodically
   useEffect(() => {
-    if (wallet.isConnected && wallet.address) {
-      const loadBalances = async () => {
-        try {
-          const { apt, susd } = await fetchShelbynetBalances(wallet.address!);
-          setWallet(w => ({
-            ...w,
-            aptBalance: apt,
-            susdBalance: susd,
-            network: "Shelbynet (Devnet)"
-          }));
-        } catch (e) {
-          console.error("Failed loading Shelbynet balances in hook:", e);
-        }
-      };
-      loadBalances();
-    }
+    if (!wallet.isConnected || !wallet.address) return;
+
+    const loadBalances = async () => {
+      try {
+        const { apt, susd } = await fetchShelbynetBalances(wallet.address!);
+        setWallet(w => {
+          if (w.aptBalance !== apt || w.susdBalance !== susd) {
+            console.log("Auto-Refreshed Shelbynet Balances successfully:", { apt, susd });
+            return {
+              ...w,
+              aptBalance: apt,
+              susdBalance: susd,
+              network: "Shelbynet (Devnet)"
+            };
+          }
+          return w;
+        });
+      } catch (e) {
+        console.error("Failed loading Shelbynet balances in hook:", e);
+      }
+    };
+
+    loadBalances();
+
+    // Auto-refresh balances every 8 seconds for a rapid, responsive experience
+    const intervalId = setInterval(loadBalances, 8000);
+
+    return () => clearInterval(intervalId);
   }, [wallet.isConnected, wallet.address, wallet.network]);
 
   // Handle addition of a newly submitted project
