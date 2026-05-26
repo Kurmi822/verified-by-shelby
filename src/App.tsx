@@ -10,6 +10,7 @@ import ProjectCard from "./components/ProjectCard";
 import SubmitModal from "./components/SubmitModal";
 import { Project, WalletState } from "./types";
 import { fetchShelbynetBalances } from "./lib/shelby-balances";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { 
   Award, ShieldCheck, Database, HardDrive, Coins, ExternalLink, RefreshCw, 
   Layers, Filter, PlusCircle, ArrowRight, Compass, Info, CheckCircle2
@@ -151,6 +152,39 @@ export default function App() {
     susdBalance: 0,
     network: "Shelbynet (Devnet)",
   });
+
+  const { connected, account, network: adapterNetwork } = useWallet();
+
+  // Sync wallet state when custom wallet adapter reports connections
+  useEffect(() => {
+    if (connected && account) {
+      const address = account.address?.toString() || "";
+      const publicKey = account.publicKey?.toString() || null;
+      setWallet(w => ({
+        ...w,
+        address,
+        publicKey,
+        isConnected: true,
+        network: "Shelbynet (Devnet)", // Ensure we stay styled on Shelbynet
+      }));
+    } else if (!connected) {
+      // Disconnect only if it's NOT the Sandbox account being active
+      setWallet(w => {
+        const isSandbox = w.address === "0x9c48bc297dbcaef4d33ebef8e58b9f71c4c8928ed84ea05ff8d8bdc813589c31";
+        if (isSandbox) {
+          return w;
+        }
+        return {
+          address: null,
+          publicKey: null,
+          isConnected: false,
+          aptBalance: 0,
+          susdBalance: 0,
+          network: "Shelbynet (Devnet)",
+        };
+      });
+    }
+  }, [connected, account, adapterNetwork]);
 
   // Project List (Preset + Custom uploaded from Local Storage)
   const [projects, setProjects] = useState<Project[]>(PRESET_PROJECTS);

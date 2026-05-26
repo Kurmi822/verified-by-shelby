@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { WalletState } from "../types";
 import { fetchShelbynetBalances, switchToShelbynet, SHELBYNET_RPC_URL } from "../lib/shelby-balances";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 interface HeaderProps {
   wallet: WalletState;
@@ -34,11 +35,42 @@ export default function Header({
   onRefreshBalances,
   isRefreshing,
 }: HeaderProps) {
+  const { connect, disconnect, connected, account, wallets: adapterWallets, network: adapterNetwork } = useWallet();
+
   const [copied, setCopied] = useState(false);
   const [showWalletDropdown, setShowWalletDropdown] = useState(false);
   const [showFaucets, setShowFaucets] = useState(false);
   const [isMintingSUSD, setIsMintingSUSD] = useState(false);
   const [mintStatus, setMintStatus] = useState<string | null>(null);
+
+  const [showNetworkPopup, setShowNetworkPopup] = useState(false);
+  const [lastCheckResult, setLastCheckResult] = useState<"success" | "warning" | null>(null);
+
+  // Network Check Effect with Interactive success/warning popup
+  useEffect(() => {
+    if (connected) {
+      const onShelby = !!(adapterNetwork && (
+        (adapterNetwork as any).url?.includes("shelby.xyz") ||
+        (adapterNetwork as any).nodeUrl?.includes("shelby.xyz") ||
+        adapterNetwork.name?.toLowerCase().includes("shelby")
+      ));
+      if (onShelby) {
+        setLastCheckResult("success");
+        setShowNetworkPopup(true);
+      } else {
+        setLastCheckResult("warning");
+        setShowNetworkPopup(true);
+      }
+      
+      const timer = setTimeout(() => {
+        setShowNetworkPopup(false);
+      }, 7000);
+      return () => clearTimeout(timer);
+    } else {
+      setLastCheckResult(null);
+      setShowNetworkPopup(false);
+    }
+  }, [connected, adapterNetwork]);
 
   // Toggle theme class on index.html body
   useEffect(() => {
@@ -68,64 +100,21 @@ export default function Header({
     setConnectionError(null);
     if (mode === "real") {
       try {
-        const petra = typeof window !== "undefined" 
-          ? ((window as any).aptos || (window as any).petra) 
-          : null;
+        const petraWallet = adapterWallets?.find(w => w.name === "Petra" || w.name.includes("Petra"));
+        const walletNameToConnect = petraWallet ? petraWallet.name : "Petra";
 
-        if (petra) {
-          // Connect to the wallet using Petra/Aptos extension
-          const account = await petra.connect();
-          console.log("Connected to Petra wallet successfully. Raw payload:", account);
-          
-          let address = "";
-          let publicKey = null;
-
-          if (account) {
-            // Highly robust account address parsing to support 2026/AIP-62/SDK shapes
-            if (typeof account.address === "string") {
-              address = account.address;
-            } else if (account.address && typeof account.address.toString === "function") {
-              address = account.address.toString();
-            } else if (typeof account === "string") {
-              address = account;
-            } else if (account.account && account.account.address) {
-              const nestedAddress = account.account.address;
-              address = typeof nestedAddress === "string" ? nestedAddress : nestedAddress.toString();
-            }
-
-            // Public key parsing
-            if (account.publicKey) {
-              publicKey = typeof account.publicKey === "string" ? account.publicKey : account.publicKey.toString();
-            } else if (account.account && account.account.publicKey) {
-              const nestedPubKey = account.account.publicKey;
-              publicKey = typeof nestedPubKey === "string" ? nestedPubKey : nestedPubKey.toString();
-            }
-          }
-
-          if (!address) {
-            throw new Error("Connected but could not resolve account address format.");
-          }
-
-          // Request network switch to Shelbynet (Devnet) Programmatically
-          await switchToShelbynet(petra);
-
-          // Fetch native APT and ShelbyUSD (sUSD) balances over Shelbynet fullnode
-          const { apt, susd } = await fetchShelbynetBalances(address);
-
-          setWallet({
-            address,
-            publicKey,
-            isConnected: true,
-            aptBalance: apt,
-            susdBalance: susd,
-            network: "Shelbynet (Devnet)",
-          });
-        } else {
-          setConnectionError("Petra Wallet extension was not detected. Please install Petra Wallet extension (minimum version 2.0+ supporting 2026 AIP-62 interface) or choose 'Instant Sandbox Wallet' for immediate preview.");
+        console.log(`Instructing wallet connection for: ${walletNameToConnect}`);
+        await connect(walletNameToConnect as any);
+        
+        // Wait minor delay and trigger custom Shelbynet config switch if present
+        await new Promise(resolve => setTimeout(resolve, 805));
+        const rawwindowAptos = typeof window !== "undefined" ? ((window as any).aptos || (window as any).petra) : null;
+        if (rawwindowAptos) {
+          await switchToShelbynet(rawwindowAptos);
         }
       } catch (err: any) {
-        console.error("Wallet connection failed", err);
-        setConnectionError(`Wallet connection failed: ${err.message || err}`);
+        console.error("Wallet standard connection failed", err);
+        setConnectionError(`Wallet connection failed: ${err.message || err || "Failed to trigger extension popups. Ensure Petra is installed."}`);
       } finally {
         setIsConnecting(false);
       }
@@ -148,7 +137,14 @@ export default function Header({
   };
 
   // Disconnect wallet
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
+    try {
+      if (connected) {
+        await disconnect();
+      }
+    } catch (e) {
+      console.warn("Disconnect standard failed", e);
+    }
     setWallet({
       address: null,
       publicKey: null,
@@ -191,7 +187,54 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md dark:border-slate-800/80 transition-colors duration-300">
+    <>
+      {/* Interactive Network Check Success/Warning Popup */}
+      {showNetworkPopup && lastCheckResult && (
+        <div className="fixed top-20 right-4 z-50 max-w-sm rounded-xl border p-4 shadow-lg transition-all transform animate-in fade-in slide-in-from-top-4 duration-300 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+          <div className="flex gap-3">
+            <div className={`rounded-lg p-1.5 ${lastCheckResult === "success" ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400" : "bg-amber-50 text-amber-600 dark:bg-amber-950/30 dark:text-amber-400"}`}>
+              <Award className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <h4 className="text-xs font-bold text-slate-900 dark:text-slate-150">
+                {lastCheckResult === "success" ? "Network Check Success" : "Network Warning"}
+              </h4>
+              <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                {lastCheckResult === "success" 
+                  ? "Connected to Shelbynet! Petra wallet is successfully validated with Devnet ledger sealing."
+                  : "Invalid endpoint detected. Petra is currently on native Devnet/Testnet. For full ledger sync, set Petra endpoint to: https://api.shelbynet.shelby.xyz/v1"
+                }
+              </p>
+              <div className="mt-3 flex gap-2 justify-end">
+                <button 
+                  onClick={() => setShowNetworkPopup(false)}
+                  className="px-2 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded text-[10px] font-bold text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
+                >
+                  Dismiss
+                </button>
+                {lastCheckResult === "warning" && (
+                  <button 
+                    onClick={async () => {
+                      const rawwindowAptos = typeof window !== "undefined" ? ((window as any).aptos || (window as any).petra) : null;
+                      if (rawwindowAptos) {
+                        const success = await switchToShelbynet(rawwindowAptos);
+                        if (success) {
+                          setShowNetworkPopup(false);
+                        }
+                      }
+                    }}
+                    className="px-2 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-[10px] font-bold transition-colors cursor-pointer"
+                  >
+                    Auto-Switch Endpoint
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md dark:border-slate-800/80 transition-colors duration-300">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* Left Side: Logo */}
@@ -462,5 +505,6 @@ export default function Header({
         </div>
       )}
     </header>
+    </>
   );
 }
