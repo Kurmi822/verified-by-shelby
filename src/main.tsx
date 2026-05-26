@@ -1,22 +1,40 @@
-import {StrictMode} from 'react';
-import {createRoot} from 'react-dom/client';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import { Buffer } from "buffer";
 
-// Buffer and global polyfill for wallet adapter standard compatibility
+// Buffer Polyfill
 if (typeof window !== "undefined") {
   window.Buffer = window.Buffer || Buffer;
   (window as any).global = window;
 }
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
+import { PetraWallet } from "@aptos-labs/wallet-adapter-wallets";
+import { AptosConfig } from "@aptos-labs/ts-sdk";
+
 import App from './App.tsx';
 import './index.css';
 
+// Shelby Devnet (Shelbynet) Configuration
+const aptosConfig = new AptosConfig({
+  network: "custom" as any,
+  fullnode: "https://api.shelbynet.shelby.xyz/v1",
+  indexer: "https://api.shelbynet.shelby.xyz/v1/graphql",
+});
+
+const wallets = [new PetraWallet()];
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AptosWalletAdapterProvider optInWallets={["Petra"]} autoConnect={true}>
+    <AptosWalletAdapterProvider
+      plugins={wallets}
+      autoConnect={false}           // false rakho better control ke liye
+      dappConfig={{
+        network: aptosConfig.network,
+        aptosConfig: aptosConfig,
+      }}
+    >
       <App />
     </AptosWalletAdapterProvider>
   </StrictMode>,
 );
-
