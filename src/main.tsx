@@ -9,15 +9,12 @@ if (typeof window !== "undefined") {
 }
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
-import { PetraWallet } from "petra-plugin-wallet-adapter";
 import App from './App.tsx';
 import './index.css';
 
-const wallets = [new PetraWallet()];
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AptosWalletAdapterProvider plugins={wallets} optInWallets={["Petra"]} autoConnect={true}>
+    <AptosWalletAdapterProvider optInWallets={["Petra"]} autoConnect={true}>
       <App />
     </AptosWalletAdapterProvider>
   </StrictMode>,

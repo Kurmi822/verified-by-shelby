@@ -108,7 +108,7 @@ export default function Header({
         
         // Wait minor delay and trigger custom Shelbynet config switch if present
         await new Promise(resolve => setTimeout(resolve, 805));
-        const rawwindowAptos = typeof window !== "undefined" ? ((window as any).aptos || (window as any).petra) : null;
+        const rawwindowAptos = typeof window !== "undefined" ? (window as any).aptos : null;
         if (rawwindowAptos) {
           await switchToShelbynet(rawwindowAptos);
         }
@@ -215,7 +215,7 @@ export default function Header({
                 {lastCheckResult === "warning" && (
                   <button 
                     onClick={async () => {
-                      const rawwindowAptos = typeof window !== "undefined" ? ((window as any).aptos || (window as any).petra) : null;
+                      const rawwindowAptos = typeof window !== "undefined" ? (window as any).aptos : null;
                       if (rawwindowAptos) {
                         const success = await switchToShelbynet(rawwindowAptos);
                         if (success) {
