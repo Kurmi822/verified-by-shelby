@@ -20,6 +20,7 @@ interface ProjectCardProps {
 export default function ProjectCard({ project }: ProjectCardProps) {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [copiedProof, setCopiedProof] = useState(false);
+  const [showTechnical, setShowTechnical] = useState(false);
 
   // Quick category color theme mapping
   const categoryThemes: Record<string, { bg: string, text: string, border: string }> = {
@@ -85,10 +86,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             {project.isShelbyVerified && (
               <div 
                 className="inline-flex items-center gap-1 bg-gradient-to-r from-indigo-500/15 to-purple-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/25 px-2.5 py-1 rounded-lg text-[10px] font-extrabold shadow-sm font-sans"
-                title="Shelby Verified & Storage Sealed"
+                title="Shelby Verified & Active Listing"
               >
-                <ShieldCheck className="h-3.5 w-3.5 text-indigo-500 animate-pulse" />
-                S-VERIFIED
+                <ShieldCheck className="h-3.5 w-3.5 text-indigo-500" />
+                VERIFIED
               </div>
             )}
           </div>
@@ -110,13 +111,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
         {/* Card Footer row */}
         <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-900/60 pt-3.5 mt-2">
-          <div className="flex items-center gap-1.5">
-            <span className="text-[10px] font-mono text-slate-400 dark:text-slate-550 block">
-              Cost: <span className="font-bold text-slate-700 dark:text-slate-300">${project.susdCost?.toFixed(3) || "0.00"} SUSD</span>
+          <div className="flex items-center gap-1.5 font-sans">
+            <span className="text-[10px] text-slate-400 dark:text-slate-500 block">
+              Fee: <span className="font-mono font-bold text-slate-705 dark:text-slate-300">${project.susdCost?.toFixed(3) || "0.00"} SUSD</span>
             </span>
           </div>
           <span className="flex items-center text-xs font-semibold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-1 duration-200">
-            View Receipts
+            View Details
             <ChevronRight className="h-3.5 w-3.5" />
           </span>
         </div>
@@ -135,7 +136,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100 dark:border-slate-900">
               <span className="text-xs font-mono text-slate-400 font-semibold uppercase tracking-wider flex items-center gap-1.5">
                 <Compass className="h-3.5 w-3.5 text-indigo-500" />
-                Explorer Project Metadata ID: {project.id}
+                dApp Profile ID: {project.id}
               </span>
               <button 
                 onClick={() => setIsDetailOpen(false)}
@@ -160,7 +161,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     {project.isShelbyVerified && (
                       <span className="bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/25 px-2.5 py-0.5 rounded-lg text-[10px] font-extrabold flex items-center gap-1">
                         <Award className="h-3 w-3" />
-                        SUSD SEALED
+                        VERIFIED dAPP
                       </span>
                     )}
                   </div>
@@ -170,7 +171,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     </span>
                     <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
                       <Calendar className="h-3 w-3" />
-                      Submitted: {formattedDate(project.submittedAt)}
+                      Listed: {formattedDate(project.submittedAt)}
                     </span>
                   </div>
                 </div>
@@ -193,7 +194,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                   href={project.websiteUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="py-1.5 px-3 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 font-semibold text-xs rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer"
+                  className="py-1.5 px-3 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-705 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-805 font-semibold text-xs rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
                   Official Link
                   <Globe className="h-3 w-3" />
@@ -225,82 +226,93 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               </p>
             </div>
 
-            {/* Shelby Verifiable Blob Block */}
-            <div className="border border-indigo-500/20 bg-indigo-500/5 dark:bg-indigo-950/20 rounded-2xl p-4.5 mb-5 space-y-3.5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-8.5 w-8.5 items-center justify-center rounded-lg bg-indigo-500 text-white shadow-sm">
-                    <Layers className="h-4.5 w-4.5" />
+            {/* Collapsible Technical Metadata & Audit */}
+            <div className="border border-slate-150 dark:border-slate-850 rounded-2xl overflow-hidden mb-5">
+              <button 
+                type="button"
+                onClick={() => setShowTechnical(!showTechnical)}
+                className="w-full flex items-center justify-between px-4 py-3 bg-slate-50/50 dark:bg-slate-900/20 hover:bg-slate-100/50 dark:hover:bg-slate-900/40 transition-colors text-left border-none cursor-pointer"
+              >
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <Layers className="h-3.5 w-3.5 text-indigo-500" />
+                  Technical Registration Record
+                </span>
+                <span className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold font-mono">
+                  {showTechnical ? "Hide Stats ✕" : "Show On-Chain Details +"}
+                </span>
+              </button>
+              
+              {showTechnical && (
+                <div className="p-4 bg-white dark:bg-slate-950 border-t border-slate-200/60 dark:border-slate-850 space-y-4">
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div>
+                      <span className="text-[10px] text-slate-400 block font-mono uppercase">Registration Fee Paid</span>
+                      <span className="font-mono font-bold text-slate-700 dark:text-slate-300">${project.susdCost?.toFixed(4) || "0.150"} SUSD</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 block font-mono uppercase">Metadata Record Size</span>
+                      <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{project.byteSize ? `${(project.byteSize / 1024).toFixed(3)} KB` : "1.2 KB"}</span>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1">
-                      Verifiable Shelby Blob Content
-                      <span className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-mono px-1.5 rounded uppercase">Live Devnet</span>
-                    </h3>
-                    <p className="text-[10px] text-slate-400">Assigned content storage address with immutable state roots.</p>
-                  </div>
-                </div>
 
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-[10px] text-indigo-600 dark:text-indigo-400 font-bold bg-white dark:bg-slate-950 py-0.5 px-2 rounded-md border border-slate-150 dark:border-slate-800 shadow-sm block">
-                    {project.byteSize ? `${(project.byteSize / 1024).toFixed(3)} KB` : "1.2 KB"}
-                  </span>
-                  <a
-                    href={project.shelbyBlobUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="py-1.5 px-3 bg-white hover:bg-slate-100 text-slate-700 dark:bg-slate-950 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800 font-bold text-[11px] rounded-xl flex items-center gap-1.5 transition-colors shadow-sm cursor-pointer dark:text-slate-300"
-                  >
-                    Load Blob
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
-                </div>
-              </div>
+                  {project.shelbyBlobUrl && (
+                    <div>
+                      <span className="text-[10px] text-slate-400 block font-mono uppercase">On-Chain Registrar URI</span>
+                      <a href={project.shelbyBlobUrl} target="_blank" rel="noreferrer" className="text-xs text-indigo-500 hover:underline inline-flex items-center gap-1.5 font-mono break-all mt-0.5">
+                        {project.shelbyBlobUrl}
+                        <ExternalLink className="h-3 w-3 shrink-0" />
+                      </a>
+                    </div>
+                  )}
 
-              {/* Cryptographic merkel tree view */}
-              <div className="bg-white dark:bg-slate-950 border border-slate-150 dark:border-slate-850 rounded-xl p-3.5">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] text-slate-400 font-mono tracking-wider font-extrabold uppercase flex items-center gap-1">
-                    <Brain className="h-3.5 w-3.5 text-indigo-500 animate-pulse" />
-                    Consensus Node Merkle Receipts
-                  </span>
-                  <button
-                    onClick={handleCopyProof}
-                    className="text-[10px] font-semibold text-indigo-500 hover:underline cursor-pointer flex items-center gap-1"
-                  >
-                    {copiedProof ? "Copied Proof JSON!" : "Copy Proof Output"}
-                  </button>
+                  {project.shelbyProof && (
+                    <div className="pt-2">
+                       <div className="flex items-center justify-between mb-1.5">
+                         <span className="text-[10px] text-slate-400 font-mono tracking-wider uppercase font-semibold">
+                           Consensus Node Signer Proof
+                         </span>
+                         <button
+                           onClick={handleCopyProof}
+                           className="text-[10px] font-semibold text-indigo-500 hover:underline cursor-pointer"
+                         >
+                           {copiedProof ? "Copied!" : "Copy Proof JSON"}
+                         </button>
+                       </div>
+                       <pre className="text-[9px] font-mono leading-relaxed bg-slate-50 dark:bg-slate-900/90 p-3 rounded-lg text-slate-500 dark:text-slate-400 overflow-x-auto max-h-36 scrollbar-styled border border-slate-100 dark:border-slate-900/80">
+                         {project.shelbyProof}
+                       </pre>
+                    </div>
+                  )}
                 </div>
-                
-                <pre className="text-[9px] font-mono leading-relaxed bg-slate-50 dark:bg-slate-900/90 p-3 rounded-lg text-slate-500 dark:text-slate-400 overflow-x-auto max-h-36 scrollbar-styled border border-slate-100 dark:border-slate-900/80">
-                  {project.shelbyProof}
-                </pre>
-              </div>
+              )}
             </div>
 
             {/* Social media connections footer list */}
-            <div className="flex flex-wrap items-center gap-4 dark:border-slate-900 border-t border-slate-100 pt-3.5 text-xs text-slate-500 dark:text-slate-400">
-              <span className="font-semibold text-[10px] uppercase tracking-wide"> dApp Channels:</span>
-              <div className="flex flex-wrap items-center gap-2.5">
-                {project.twitterUrl && (
-                  <a href={project.twitterUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-indigo-500 transition-colors">
-                    <Twitter className="h-3.5 w-3.5" />
-                    Twitter
+            <div className="flex flex-wrap items-center justify-between gap-4 dark:border-slate-900 border-t border-slate-100 pt-3.5 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-[10px] uppercase tracking-wide">Developer Channels:</span>
+                <div className="flex flex-wrap items-center gap-2.5 ml-1">
+                  {project.twitterUrl && (
+                    <a href={project.twitterUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-indigo-500 transition-colors">
+                      <Twitter className="h-3.5 w-3.5" />
+                      Twitter
+                    </a>
+                  )}
+                  {project.discordUrl && (
+                    <a href={project.discordUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-indigo-500 transition-colors">
+                      <Share2 className="h-3.5 w-3.5" />
+                      Discord
                   </a>
-                )}
-                {project.discordUrl && (
-                  <a href={project.discordUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-indigo-500 transition-colors">
-                    <Share2 className="h-3.5 w-3.5" />
-                    Discord
-                  </a>
-                )}
-                {project.telegramUrl && (
-                  <a href={project.telegramUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-indigo-500 transition-colors">
-                    <FileText className="h-3.5 w-3.5" />
-                    Telegram
-                  </a>
-                )}
+                  )}
+                  {project.telegramUrl && (
+                    <a href={project.telegramUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-indigo-500 transition-colors">
+                      <FileText className="h-3.5 w-3.5" />
+                      Telegram
+                    </a>
+                  )}
+                </div>
               </div>
+              <span className="text-[9px] text-slate-400 font-mono">Epoch Verified ✔</span>
             </div>
 
           </div>

@@ -1,6 +1,6 @@
 {
   "name": "Shelby Verified Web3 Hub",
-  "description": "Production-grade verified Web3 platform for Shelby Team review. Featuring real-time Shelby USD balance tracking, cost estimation, and cryptographic proof blob uploads on Shelby Devnet.",
+  "description": "Premium, production-grade Web3 dApp ecosystem showcase and developer portal on Shelbynet. Complete with real-time APT and ShelbyUSD (SUSD) coin balance tracking, active network status, and easy developer dApp register submissions.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

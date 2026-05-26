@@ -276,10 +276,10 @@ export default function SubmitModal({
           <div>
             <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-indigo-500" />
-              Upload Project to Shelby Devnet
+              Register dApp on Shelbynet
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Submit your project meta-payload and permanently seal it inside an immutable Shelby USD (SUSD) backed Blob.
+              Submit your decentralized application details to the Shelbynet community directory.
             </p>
           </div>
           <button 
@@ -307,7 +307,7 @@ export default function SubmitModal({
                   </div>
                   
                   <div className="space-y-2">
-                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Securing Shelby Devnet storage</h3>
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Registering on Shelbynet</h3>
                     <p className="text-sm text-slate-500 dark:text-slate-400">{uploadStatusMsg}</p>
                   </div>
 
@@ -317,10 +317,10 @@ export default function SubmitModal({
                       1. Check Balance
                     </div>
                     <div className={`p-2 rounded-lg border transition-all ${uploadStep >= 2 ? "bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-400" : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400"}`}>
-                      2. Hashing Sign
+                      2. Ledger Sign
                     </div>
                     <div className={`p-2 rounded-lg border transition-all ${uploadStep >= 3 ? "bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-400" : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400"}`}>
-                      3. Epoch Seal
+                      3. Registry Broadcast
                     </div>
                   </div>
                 </div>
@@ -332,8 +332,8 @@ export default function SubmitModal({
                       <CheckCircle2 className="h-6.5 w-6.5" />
                     </div>
                     <div>
-                      <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">Blob Committed Successfully!</h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">Your Web3 project meta record is stored on the Shelby Devnet. Verified Status Active.</p>
+                      <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">dApp Listing Registered Successfully!</h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Your Web3 project entry has been broadcasted and verified on the Shelbynet Directory ledger.</p>
                     </div>
                   </div>
 
@@ -341,15 +341,15 @@ export default function SubmitModal({
                   <div className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-5 space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <span className="text-[10px] tracking-wider text-slate-400 dark:text-slate-500 font-mono uppercase block">SUSD Storage Deduction</span>
+                        <span className="text-[10px] tracking-wider text-slate-400 dark:text-slate-500 font-mono uppercase block">SUSD Listing Fee</span>
                         <span className="font-mono text-sm font-bold text-indigo-600 dark:text-indigo-400">${uploadReceipt?.susdCost?.toFixed(4)} SUSD</span>
                       </div>
                       <div>
-                        <span className="text-[10px] tracking-wider text-slate-400 dark:text-slate-500 font-mono uppercase block">Committed Data Payload</span>
-                        <span className="font-mono text-sm font-bold text-slate-700 dark:text-slate-300">{(uploadReceipt?.byteSize / 1024).toFixed(3)} KB ({uploadReceipt?.byteSize} bytes)</span>
+                        <span className="text-[10px] tracking-wider text-slate-400 dark:text-slate-500 font-mono uppercase block">Registry Entry Size</span>
+                        <span className="font-mono text-sm font-bold text-slate-700 dark:text-slate-300">{(uploadReceipt?.byteSize / 1024).toFixed(3)} KB</span>
                       </div>
                       <div className="sm:col-span-2">
-                        <span className="text-[10px] tracking-wider text-slate-400 dark:text-slate-500 font-mono uppercase block">Verifiable Devnet Blob URI</span>
+                        <span className="text-[10px] tracking-wider text-slate-400 dark:text-slate-500 font-mono uppercase block">On-Chain Registry URI</span>
                         <a 
                           href={uploadReceipt?.shelbyBlobUrl} 
                           target="_blank" 
@@ -366,7 +366,7 @@ export default function SubmitModal({
                     <div className="rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950 p-4">
                       <span className="text-[10px] tracking-wider text-slate-400 dark:text-slate-500 font-mono uppercase block mb-1.5 font-bold flex items-center gap-1">
                         <Brain className="h-3.5 w-3.5 text-indigo-500" />
-                        SHA-256 Merkle Proof & Consensus Signatures
+                        Directory ledger record proof
                       </span>
                       <pre className="font-mono text-[10px] overflow-x-auto text-slate-600 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-900/80 p-3 rounded-lg border border-slate-100 dark:border-slate-800/60 max-h-40 scrollbar-styled leading-relaxed">
                         {uploadReceipt?.shelbyProof}
@@ -394,7 +394,7 @@ export default function SubmitModal({
               {/* Shelby Presets Quick Selection */}
               <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 mb-2">
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-medium block mb-2.5">
-                  ⚡ Review Hack: Instantly prefill with a production-grade verified project preset:
+                  ⚡ Instantly pre-fill the form with a demo listing preset:
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {PRESETS.map((preset, idx) => (
@@ -595,18 +595,17 @@ export default function SubmitModal({
 
               {/* Bottom Row Estimator and Submit */}
               <div className="border-t border-slate-100 dark:border-slate-900 pt-4 mt-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                
-                {/* Cost Estimator Panel */}
+                             {/* Cost Estimator Panel */}
                 <div className="flex items-center gap-3 bg-indigo-500/10 dark:bg-indigo-950/20 hover:bg-indigo-500/15 border border-indigo-500/20 rounded-2xl py-2.5 px-4 max-w-md shrink-0">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm shrink-0">
                     <Coins className="h-4 w-4" />
                   </div>
                   <div>
                     <span className="block text-[10px] text-indigo-700 dark:text-indigo-400 font-mono font-bold uppercase tracking-wider">
-                      Shelby USD Consensus Estimate
+                      Directory registration estimate
                     </span>
                     <span className="font-mono text-xs text-slate-600 dark:text-slate-300 block">
-                      Estimated Size: <span className="font-bold text-slate-800 dark:text-slate-100">{(jsonSize / 1024).toFixed(3)} KB</span> • Total SUSD: <span className="font-bold text-indigo-600 dark:text-indigo-400 font-mono">${costInSUSD.toFixed(4)}</span>
+                      Estimated Size: <span className="font-bold text-slate-805 dark:text-slate-100">{(jsonSize / 1024).toFixed(3)} KB</span> • Total SUSD: <span className="font-bold text-indigo-605 dark:text-indigo-405 font-mono">${costInSUSD.toFixed(4)}</span>
                     </span>
                   </div>
                 </div>
@@ -616,12 +615,12 @@ export default function SubmitModal({
                   {!wallet.isConnected ? (
                     <div className="text-right">
                       <span className="text-[11px] text-rose-500 font-medium block">Wallet disconnected.</span>
-                      <span className="text-[10px] text-slate-400 dark:text-slate-500 block">Connect via Header before uploading!</span>
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 block">Connect via Header before registering!</span>
                     </div>
                   ) : !hasSufficientSUSD ? (
                     <div className="text-right">
                       <span className="text-[11px] text-amber-500 font-semibold block">Insufficient Shelby USD.</span>
-                      <span className="text-[10px] text-slate-400 block">Requires: ${costInSUSD.toFixed(4)} SUSD.</span>
+                      <span className="text-[10px] text-slate-405 block">Requires: ${costInSUSD.toFixed(4)} SUSD.</span>
                     </div>
                   ) : null}
 
@@ -630,7 +629,7 @@ export default function SubmitModal({
                     disabled={!wallet.isConnected || !hasSufficientSUSD || !name || !description || !websiteUrl}
                     className="py-2.5 px-7 bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white font-bold rounded-xl text-sm transition-all shadow-md shadow-indigo-500/10 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0 flex items-center gap-2"
                   >
-                    Upload to Shelby Blobs
+                    Register dApp
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </div>

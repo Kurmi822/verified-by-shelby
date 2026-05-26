@@ -20,7 +20,7 @@ const PRESET_PROJECTS: Project[] = [
   {
     id: "sb_0f78d4ea05ff8d8bdc813589c",
     name: "Aptos Oracle Alliance",
-    description: "Next-generation consensus-guaranteed oracle stream delivering sub-second real-world price assets directly to Aptos smart contracts, storing cryptographic history tables inside perpetual Shelby blobs to verify consensus health.",
+    description: "The premier decentralized oracle network delivering real-time, high-fidelity sub-second price feeds directly to smart contracts on Aptos. Designed with multi-validator consensus to empower high-performance DeFi portals, lending pools, and automated market makers.",
     logoUrl: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=128&auto=format&fit=crop&q=60",
     bannerUrl: "https://images.unsplash.com/photo-1605792657660-596af9009e82?w=805&auto=format&fit=crop&q=80",
     screenshots: [
@@ -48,7 +48,7 @@ const PRESET_PROJECTS: Project[] = [
   {
     id: "sb_1bc89a8e58b9f71c4c8928ed8",
     name: "MoveLink Guard",
-    description: "Multi-sig threshold authorization treasury toolbox for secure Aptos teams. Allows managers to lock operational capital and write dynamic spending policy guidelines verified directly by Shelby block validators.",
+    description: "A secure threshold multi-signature treasury toolbox engineered for professional teams in the Move ecosystem. Allows organizations to lock operating capital, establish granular custom spending rules, and track team expenses with precise on-chain audit reports.",
     logoUrl: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=128&auto=format&fit=crop&q=60",
     bannerUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=805&auto=format&fit=crop&q=80",
     screenshots: [
@@ -76,7 +76,7 @@ const PRESET_PROJECTS: Project[] = [
   {
     id: "sb_e58b9f71c4c8928ed84ea05ff",
     name: "MemeWave Tip Engine",
-    description: "An interactive peer-to-peer micro-tipping plugin for creators. It anchors popular digital content references and engagement ratings as perpetual, gasless proofs on Shelby Devnet storage blocks to preserve social history.",
+    description: "The ultimate micro-tipping browser extension and widget library for creator platforms. Seamlessly integrates content monetization, allowing users to tip digital creators instantly with minimal network fees while supporting standard Move tokens.",
     logoUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=128&auto=format&fit=crop&q=60",
     bannerUrl: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=805&auto=format&fit=crop&q=80",
     screenshots: [
@@ -104,7 +104,7 @@ const PRESET_PROJECTS: Project[] = [
   {
     id: "sb_bc813589c8ed84ea05ff8d8bd",
     name: "ShellPass Tickets",
-    description: "Fully fractionated tokenized entry tickets and dynamic licensing cards built for real-life conventions. Encapsulates physical ticket credentials inside private, encrypted Shelby Devnet storage blobs with rapid scanning hooks.",
+    description: "A modern, responsive ticket tokenization platform built to secure events. Seamlessly handles physical-to-digital admission passes using decentralized metadata tracking, ensuring genuine ownership and rapid QR validation checks at real-world event entries.",
     logoUrl: "https://images.unsplash.com/photo-1644016825114-1e58f00072ad?w=128&auto=format&fit=crop&q=60",
     bannerUrl: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=805&auto=format&fit=crop&q=80",
     screenshots: [
@@ -363,9 +363,9 @@ export default function App() {
           {activeTab === "my-projects" && (
             <div className="space-y-6">
               <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
-                <h2 className="text-2xl font-bold tracking-tight text-slate-805 dark:text-slate-100">My Verifiable uploads</h2>
-                <p className="text-xs text-slate-405 mt-1 dark:text-slate-400">
-                  Manage digital receipts and audit compliance files permanently sealed on Shelby Devnet. These profiles are owned by your active signer key.
+                <h2 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100">My Registered dApps</h2>
+                <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">
+                  Manage dApp profiles registered under your connected wallet signer address on the Shelbynet ecosystem.
                 </p>
               </div>
 
@@ -378,15 +378,15 @@ export default function App() {
               ) : (
                 <div className="text-center py-16 border border-dashed border-slate-200 dark:border-slate-800 rounded-3xl bg-white/40 dark:bg-slate-950/20 max-w-lg mx-auto">
                   <Database className="h-12 w-12 text-slate-400 mx-auto mb-3 animate-pulse" />
-                  <h3 className="text-base font-bold text-slate-700 dark:text-slate-300">No verifiable upload logs</h3>
-                  <p className="text-xs text-slate-505 mt-1 max-w-xs mx-auto">
-                    You have not submitted any meta-records with your active wallet signer address yet. Try creating a project!
+                  <h3 className="text-base font-bold text-slate-700 dark:text-slate-300">No registered listings</h3>
+                  <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
+                    You have not submitted any directory listings with your active wallet signer address yet.
                   </p>
                   <button
                     onClick={() => setIsSubmitModalOpen(true)}
                     className="mt-4 py-2.5 px-5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition-all shadow-sm cursor-pointer"
                   >
-                    Upload Project Blob
+                    Register Your dApp
                   </button>
                 </div>
               )}
@@ -402,7 +402,7 @@ export default function App() {
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-4.5 w-4.5 text-indigo-500" />
             <span className="text-slate-500 dark:text-slate-400 font-medium">
-              Shelby Devnet consensus storage indexing • Block time Epoch 2410
+              ShelbyForge Ecosystem Hub • Live on Shelbynet Devnet
             </span>
           </div>
           <div className="flex items-center gap-4 text-slate-400">
