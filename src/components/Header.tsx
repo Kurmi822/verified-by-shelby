@@ -197,16 +197,15 @@ export default function Header({
         {/* Left Side: Logo */}
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => setActiveTab("discover")}>
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg shadow-indigo-500/20">
-              <Award className="h-5 w-5" id="shelby-logo-icon" />
-              <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-tr from-indigo-500 to-pink-500 opacity-20 blur-md duration-1000 group-hover:opacity-40"></div>
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-650 text-white">
+              <Award className="h-4.5 w-4.5" id="shelby-logo-icon" />
             </div>
             <div>
-              <span className="font-sans text-lg font-bold tracking-tight text-slate-800 dark:text-slate-100 block">
-                Shelby <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">Verified</span>
+              <span className="font-sans text-sm font-bold tracking-tight text-slate-850 dark:text-slate-100 block">
+                ShelbyForge
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 block -mt-1 font-semibold">
-                Web3 Protocol Hub
+              <span className="font-mono text-[9px] uppercase tracking-wider text-slate-400 dark:text-slate-505 block -mt-1 font-bold">
+                Ecosystem Hub
               </span>
             </div>
           </div>

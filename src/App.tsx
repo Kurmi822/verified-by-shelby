@@ -132,7 +132,7 @@ const PRESET_PROJECTS: Project[] = [
 ];
 
 export default function App() {
-  const [darkMode, setDarkMode] = useState<boolean>(true);
+  const [darkMode, setDarkMode] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"discover" | "submit" | "my-projects">("discover");
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -157,9 +157,8 @@ export default function App() {
 
   // Hydrate custom submitted projects and wallet settings from localStorage on load
   useEffect(() => {
-    // Determine user preference for dark mode
-    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setDarkMode(systemTheme);
+    // Keep default light mode initially, but support manual shifts
+    setDarkMode(false);
 
     // Load custom projects
     const savedProjects = localStorage.getItem("shelby_custom_projects");
