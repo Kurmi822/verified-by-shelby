@@ -9,7 +9,7 @@ import {
   Copy, Check, LogOut, Coins, ShieldAlert, Award
 } from "lucide-react";
 import { WalletState } from "../types";
-import { fetchShelbynetBalances, switchToShelbynet, SHELBYNET_RPC_URL } from "../lib/shelby-balances";
+import { fetchShelbynetBalances, SHELBYNET_RPC_URL } from "../lib/shelby-balances";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 interface HeaderProps {
@@ -35,7 +35,7 @@ export default function Header({
   onRefreshBalances,
   isRefreshing,
 }: HeaderProps) {
-  const { connect, disconnect, connected, account, wallets: adapterWallets, network: adapterNetwork } = useWallet();
+  const { connect, disconnect, connected, account, wallets: adapterWallets, network: adapterNetwork, changeNetwork } = useWallet();
 
   const [copied, setCopied] = useState(false);
   const [showWalletDropdown, setShowWalletDropdown] = useState(false);
@@ -106,11 +106,18 @@ export default function Header({
         console.log(`Instructing wallet connection for: ${walletNameToConnect}`);
         await connect(walletNameToConnect as any);
         
-        // Wait minor delay and trigger custom Shelbynet config switch if present
-        await new Promise(resolve => setTimeout(resolve, 805));
-        const rawwindowAptos = typeof window !== "undefined" ? (window as any).aptos : null;
-        if (rawwindowAptos) {
-          await switchToShelbynet(rawwindowAptos);
+        // Wait minor delay and trigger custom Shelbynet config switch if present, safely with no throw
+        await new Promise(resolve => setTimeout(resolve, 800));
+        if (changeNetwork) {
+          try {
+            await changeNetwork({
+              name: "custom" as any,
+              rpcUrl: SHELBYNET_RPC_URL,
+            });
+            console.log("Successfully switched network via standard changeNetwork wrapper");
+          } catch (netErr: any) {
+            console.warn("Silent failure of programmatic network change: ", netErr);
+          }
         }
       } catch (err: any) {
         console.error("Wallet standard connection failed", err);
@@ -196,7 +203,7 @@ export default function Header({
               <Award className="h-5 w-5" />
             </div>
             <div className="flex-1">
-              <h4 className="text-xs font-bold text-slate-900 dark:text-slate-150">
+              <h4 className="text-xs font-bold text-slate-900 dark:text-slate-200">
                 {lastCheckResult === "success" ? "Network Check Success" : "Network Warning"}
               </h4>
               <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
@@ -215,12 +222,19 @@ export default function Header({
                 {lastCheckResult === "warning" && (
                   <button 
                     onClick={async () => {
-                      const rawwindowAptos = typeof window !== "undefined" ? (window as any).aptos : null;
-                      if (rawwindowAptos) {
-                        const success = await switchToShelbynet(rawwindowAptos);
-                        if (success) {
+                      if (changeNetwork) {
+                        try {
+                          await changeNetwork({
+                            name: "custom" as any,
+                            rpcUrl: SHELBYNET_RPC_URL,
+                          });
                           setShowNetworkPopup(false);
+                        } catch (err: any) {
+                          console.warn("Change network standard failed:", err);
+                          alert("Aptos standard network switch failed. Please change your Petra network context to Shelbynet Devnet manually in the extension settings (https://api.shelbynet.shelby.xyz/v1).");
                         }
+                      } else {
+                        alert("Wallet does not expose standard network switching. Please configure Shelbynet Devnet manually in your Petra extension (Settings -> Network).");
                       }
                     }}
                     className="px-2 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-[10px] font-bold transition-colors cursor-pointer"
@@ -240,14 +254,14 @@ export default function Header({
         {/* Left Side: Logo */}
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => setActiveTab("discover")}>
-            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-650 text-white">
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-sm">
               <Award className="h-4.5 w-4.5" id="shelby-logo-icon" />
             </div>
             <div>
-              <span className="font-sans text-sm font-bold tracking-tight text-slate-850 dark:text-slate-100 block">
+              <span className="font-sans text-sm font-bold tracking-tight text-slate-800 dark:text-slate-100 block">
                 ShelbyForge
               </span>
-              <span className="font-mono text-[9px] uppercase tracking-wider text-slate-400 dark:text-slate-505 block -mt-1 font-bold">
+              <span className="font-mono text-[9px] uppercase tracking-wider text-slate-400 dark:text-slate-500 block -mt-1 font-bold">
                 Ecosystem Hub
               </span>
             </div>
@@ -451,7 +465,7 @@ export default function Header({
                     </div>
 
                     {/* Faucets Collapsible / Expandable Section */}
-                    <div className="pt-2 border-t border-slate-105 dark:border-slate-900">
+                    <div className="pt-2 border-t border-slate-100 dark:border-slate-900">
                       <button
                         onClick={handleMintSUSD}
                         disabled={isMintingSUSD}

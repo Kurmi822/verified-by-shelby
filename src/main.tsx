@@ -9,9 +9,12 @@ if (typeof window !== "undefined") {
 }
 
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
+import { PetraWallet } from "petra-plugin-wallet-adapter";
 import { Network } from "@aptos-labs/ts-sdk";
 import App from "./App.tsx";
 import "./index.css";
+
+const wallets = [new PetraWallet()];
 
 // Configure dApp is pointing to Shelbynet Custom Network natively
 const shelbyDappConfig = {
@@ -26,6 +29,7 @@ const shelbyDappConfig = {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AptosWalletAdapterProvider 
+      plugins={wallets}
       optInWallets={["Petra"]} 
       autoConnect={true}
       dappConfig={shelbyDappConfig}

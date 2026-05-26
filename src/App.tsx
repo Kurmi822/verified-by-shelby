@@ -133,10 +133,18 @@ const PRESET_PROJECTS: Project[] = [
 ];
 
 export default function App() {
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem("shelby_theme");
+    return saved === "light" ? false : true; // Default to professional dark theme
+  });
   const [activeTab, setActiveTab] = useState<"discover" | "submit" | "my-projects">("discover");
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleSetDarkMode = (val: boolean) => {
+    setDarkMode(val);
+    localStorage.setItem("shelby_theme", val ? "dark" : "light");
+  };
 
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState("");
@@ -191,9 +199,6 @@ export default function App() {
 
   // Hydrate custom submitted projects and wallet settings from localStorage on load
   useEffect(() => {
-    // Keep default light mode initially, but support manual shifts
-    setDarkMode(false);
-
     // Load custom projects
     const savedProjects = localStorage.getItem("shelby_custom_projects");
     if (savedProjects) {
@@ -341,7 +346,7 @@ export default function App() {
           setActiveTab={setActiveTab}
           openSubmitModal={() => setIsSubmitModalOpen(true)}
           darkMode={darkMode}
-          setDarkMode={setDarkMode}
+          setDarkMode={handleSetDarkMode}
           onRefreshBalances={handleRefreshBalances}
           isRefreshing={isRefreshing}
         />

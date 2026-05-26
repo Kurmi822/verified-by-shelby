@@ -114,7 +114,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       {/* Simplified, Clean Modal Detail Box */}
       {isDetailOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs dark:bg-black/60 flex items-center justify-center p-4">
-          <div className="relative w-full max-w-lg rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 shadow-xl p-5 sm:p-6 overflow-y-auto max-h-[90vh] scrollbar-styled">
+          <div className="relative w-full max-w-lg rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl p-5 sm:p-6 overflow-y-auto max-h-[90vh] scrollbar-styled">
             
             {/* Minimal Header */}
             <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100 dark:border-slate-900">
