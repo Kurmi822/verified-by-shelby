@@ -481,7 +481,7 @@ export default function SubmitModal({
               </div>
 
               {/* Screenshots Array Box */}
-              <div className="border border-slate-150 dark:border-slate-900 rounded-2xl p-4 bg-slate-50/40 dark:bg-slate-950/20">
+              <div className="border border-slate-200 dark:border-slate-800 rounded-2xl p-4 bg-slate-50/40 dark:bg-slate-950/20">
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide mb-2.5">Verified Screenshots</label>
                 <div className="flex gap-2 mb-3">
                   <input
@@ -494,7 +494,7 @@ export default function SubmitModal({
                   <button
                     type="button"
                     onClick={addScreenshot}
-                    className="py-2.5 px-4 bg-slate-800 dark:bg-indigo-950 hover:bg-slate-705 dark:hover:bg-indigo-900 border border-slate-200 dark:border-indigo-900 text-slate-800 dark:text-indigo-300 font-semibold rounded-xl text-xs transition-colors cursor-pointer"
+                    className="py-2.5 px-4 bg-slate-800 dark:bg-indigo-950 hover:bg-slate-700 dark:hover:bg-indigo-900 border border-slate-200 dark:border-indigo-900 text-slate-100 dark:text-indigo-300 font-semibold rounded-xl text-xs transition-colors cursor-pointer"
                   >
                     Add Link
                   </button>

@@ -54,7 +54,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       {/* Pristine Clean Minimalist Card */}
       <div 
         onClick={() => setIsDetailOpen(true)}
-        className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-slate-200 bg-white dark:bg-slate-950 p-5 dark:border-slate-800 hover:border-indigo-500 hover:shadow-xs transition-all duration-200 cursor-pointer h-full"
+        className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-slate-200 bg-white dark:bg-slate-950 p-5 dark:border-slate-800 hover:border-indigo-500 hover:-translate-y-1 hover:shadow-md hover:shadow-indigo-500/5 dark:hover:shadow-transparent transition-all duration-300 ease-out cursor-pointer h-full"
       >
         <div>
           {/* Top row */}
@@ -63,7 +63,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               <img 
                 src={project.logoUrl || "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=128"} 
                 alt={`${project.name} Logo`} 
-                className="h-10 w-10 rounded-lg object-cover bg-slate-50 border border-slate-250 dark:border-slate-800 shadow-2xs"
+                className="h-10 w-10 rounded-lg object-cover bg-slate-50 border border-slate-200 dark:border-slate-800 shadow-2xs"
                 referrerPolicy="no-referrer"
               />
               <div>
@@ -113,7 +113,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
       {/* Simplified, Clean Modal Detail Box */}
       {isDetailOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs dark:bg-black/60 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm dark:bg-black/60 flex items-center justify-center p-4">
           <div className="relative w-full max-w-lg rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl p-5 sm:p-6 overflow-y-auto max-h-[90vh] scrollbar-styled">
             
             {/* Minimal Header */}
@@ -139,7 +139,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               />
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">{project.name}</h2>
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-white font-display">{project.name}</h2>
                   {project.isShelbyVerified && (
                     <span className="bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-[9px] font-bold px-1.5 py-0.5 rounded">
                       Verified
@@ -171,7 +171,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 href={project.websiteUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="py-1.5 px-3 border border-slate-200 dark:border-slate-805 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-305 hover:bg-slate-50 text-xs font-semibold rounded-lg flex items-center gap-1 transition-colors"
+                className="py-1.5 px-3 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-650 dark:text-slate-300 hover:bg-slate-50 text-xs font-semibold rounded-lg flex items-center gap-1 transition-colors"
               >
                 Website
                 <Globe className="h-3 w-3" />
@@ -180,17 +180,17 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
             {/* Beautiful, clean description */}
             <div className="mb-4">
-              <p className="text-sm text-slate-650 dark:text-slate-350 leading-relaxed bg-slate-50 dark:bg-slate-900/30 p-3.5 rounded-xl border border-slate-100 dark:border-slate-900">
+              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-900/30 p-3.5 rounded-xl border border-slate-100 dark:border-slate-900">
                 {project.description}
               </p>
             </div>
 
             {/* Collapsible Technical info to prevent page clutter */}
-            <div className="border border-slate-150 dark:border-slate-850 rounded-xl overflow-hidden mb-4">
+            <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden mb-4">
               <button 
                 type="button"
                 onClick={() => setShowTechnical(!showTechnical)}
-                className="w-full flex items-center justify-between px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-900/10 hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors text-left text-xs font-bold text-slate-605 dark:text-slate-300 cursor-pointer"
+                className="w-full flex items-center justify-between px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-900/10 hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors text-left text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer"
               >
                 <span>Technical Specifications</span>
                 <span className="text-xs text-indigo-600 dark:text-indigo-400 font-mono">
@@ -199,7 +199,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               </button>
               
               {showTechnical && (
-                <div className="p-3.5 bg-white dark:bg-slate-950 border-t border-slate-150 dark:border-slate-850 space-y-3.5 text-xs">
+                <div className="p-3.5 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 space-y-3.5 text-xs">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <span className="text-[10px] text-slate-400 block font-mono uppercase">Fee Paid</span>

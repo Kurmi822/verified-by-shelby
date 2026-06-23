@@ -113,7 +113,7 @@ export default function Header({
             await changeNetwork({
               name: "custom" as any,
               rpcUrl: SHELBYNET_RPC_URL,
-            });
+            } as any);
             console.log("Successfully switched network via standard changeNetwork wrapper");
           } catch (netErr: any) {
             console.warn("Silent failure of programmatic network change: ", netErr);
@@ -227,7 +227,7 @@ export default function Header({
                           await changeNetwork({
                             name: "custom" as any,
                             rpcUrl: SHELBYNET_RPC_URL,
-                          });
+                          } as any);
                           setShowNetworkPopup(false);
                         } catch (err: any) {
                           console.warn("Change network standard failed:", err);
